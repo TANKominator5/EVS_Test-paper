@@ -13,6 +13,9 @@ test('published sets have full transcripts and match their printed keys', () => 
     5: 'DBCADACABAABADAACCAACDACBBAADC',
     6: 'DCBDDBAABDABACCDACBBACBBDBAABC',
     7: 'BDDAAABACCCACABACAACCCCADBBACC',
+    8: 'CADBABCADDCAACCDADACBDCBBABCCA',
+    9: 'ABCDADCDBCCCDACBBCBBBCBCADACBA',
+    10: 'DBCBCCCBDCCBBBCBAAADCBCCCADDAA',
   };
   assert.equal(new Set(papers.map((paper) => paper.id)).size, papers.length);
   for (const paper of papers) {
