@@ -9,6 +9,8 @@ npm run dev
 
 Open `http://localhost:3000`. `npm run build` exports a static site to `out/`; `npm test` checks the scoring and question data. Attempts live in local storage and are specific to the browser profile and site address. Clearing site data removes those attempts.
 
+Run the desktop and mobile browser tests with `npx playwright install chromium` and `npx playwright test`.
+
 ## Paper data
 
 - Source photos are local under `Questions Pic/` and ignored by Git.

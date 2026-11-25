@@ -116,6 +116,7 @@ export default function PracticeApp() {
 
   function showResults(item: Attempt) {
     setActive(item.id);
+    setReviewFilter('all');
     go('results');
   }
 
@@ -216,8 +217,9 @@ export default function PracticeApp() {
                   {options.map((letter, i) => {
                     const correct = feedback && letter === question.key;
                     const wrong = feedback && letter === picked && !correct;
-                    return <button key={letter} type="button" className={`choice ${correct ? 'choice-right' : wrong ? 'choice-wrong' : ''}`} aria-disabled={feedback} aria-label={`${letter}: ${question.choices[i]}${correct ? ' (মুদ্রিত উত্তর)' : wrong ? ' (আপনার ভুল উত্তর)' : ''}`} onClick={() => !feedback && pick(letter)}>
-                      <span className="choice-letter" lang="en">{letter}</span><span className="choice-text">{question.choices[i]}</span>{correct && <Check size={20}/>} {wrong && <X size={20}/>}
+                    const label = question.labels?.[i] ?? letter;
+                    return <button key={letter} type="button" className={`choice ${correct ? 'choice-right' : wrong ? 'choice-wrong' : ''}`} aria-disabled={feedback} aria-label={`${label}: ${question.choices[i]}${correct ? ' (উত্তরসূচির উত্তর)' : wrong ? ' (আপনার ভুল উত্তর)' : ''}`} onClick={() => !feedback && pick(letter)}>
+                      <span className="choice-letter" lang="en">{label}</span><span className="choice-text">{question.choices[i]}</span>{correct && <Check size={20}/>} {wrong && <X size={20}/>}
                     </button>;
                   })}
                 </div>
@@ -226,7 +228,7 @@ export default function PracticeApp() {
                   <div className="feedback-title">{outcome === 'correct' ? <CircleCheck size={22}/> : outcome === 'wrong' ? <CircleAlert size={22}/> : <CircleAlert size={22}/>}<div><h3 id="feedback-title">{outcome === 'correct' ? 'সঠিক উত্তর!' : outcome === 'wrong' ? 'উত্তরটি মেলেনি' : 'উত্তর দেওয়া হয়নি'}</h3><p>মুদ্রিত উত্তর: <strong>{question.key} · {question.choices[order]}</strong></p></div></div>
                   {question.anomaly && <div className="warning"><Flag size={17}/><div><strong>উত্তরসূচিতে অসঙ্গতি (Anomaly)</strong><p>{question.anomaly} স্কোর মুদ্রিত উত্তরসূচি অনুযায়ী।</p></div></div>}
                   <h4>বিকল্পগুলোর ব্যাখ্যা (Explanation)</h4>
-                  <ul className="reasons">{options.map((letter, i) => <li key={letter}><span className={letter === question.key ? 'reason-key' : ''}>{letter}</span><p>{question.reasons[i]}</p></li>)}</ul>
+                  <ul className="reasons">{options.map((letter, i) => <li key={letter}><span className={letter === question.key ? 'reason-key' : ''}>{question.labels?.[i] ?? letter}</span><p>{question.reasons[i]}</p></li>)}</ul>
                   <div className="study-note"><Lightbulb size={20}/><div><strong>মনে রাখুন (Study Note)</strong><p>{question.note}</p></div></div>
                 </section>}
                 <div className="question-controls"><button className="secondary" disabled={index === 0} onClick={() => move(index - 1)}><ChevronLeft size={18}/> আগের প্রশ্ন</button><button className="primary" disabled={index >= score.total - 1} onClick={() => move(index + 1)}>পরের প্রশ্ন <ChevronRight size={18}/></button></div>

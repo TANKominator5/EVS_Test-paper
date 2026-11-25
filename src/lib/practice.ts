@@ -14,6 +14,7 @@ export type Question = {
   key: Option;
   topic: Topic;
   reasons: [string, string, string, string];
+  labels?: readonly [string, string, string, string];
   note: string;
   anomaly?: string;
 };
@@ -27,7 +28,7 @@ export type Attempt = {
   answers: Partial<Record<number, Option>>;
 };
 
-export function parsePaper(id: number, key: string, source: string): Paper {
+export function parsePaper(id: number, key: string, source: string, printedLabels: Partial<Record<number, Question['labels']>> = {}): Paper {
   const rows = source.trim().split('\n').filter((line) => line.trim());
   if (rows.length !== 30 || !/^[ABCD]{30}$/.test(key)) throw new Error(`Set ${id}: expected 30 rows and 30 keys`);
   return { id, questions: rows.map((row, i) => {
@@ -36,7 +37,7 @@ export function parsePaper(id: number, key: string, source: string): Paper {
     if ((fields.length !== 11 && fields.length !== 12) || !Object.hasOwn(topics, topic) || fields.some((value) => !value)) {
       throw new Error(`Set ${id}, question ${i + 1}: invalid record`);
     }
-    return { id: i + 1, topic: topic as Topic, text, choices: [a, b, c, d], key: key[i] as Option, reasons: [ra, rb, rc, rd], note, anomaly };
+    return { id: i + 1, topic: topic as Topic, text, choices: [a, b, c, d], key: key[i] as Option, reasons: [ra, rb, rc, rd], note, anomaly, labels: printedLabels[i + 1] };
   }) };
 }
 
