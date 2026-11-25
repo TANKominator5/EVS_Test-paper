@@ -54,3 +54,13 @@ test('duplicated printed labels keep independent scoring positions', async ({ pa
   await expect(page.getByText('C · গল্পবলা পদ্ধতি')).toBeVisible();
   await expect(page.getByText('উত্তরসূচিতে অসঙ্গতি (Anomaly)')).toBeVisible();
 });
+
+test('all 15 papers are playable and Set 15 Q12 uses the printed C', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'অনুশীলন শুরু করুন' })).toHaveCount(15);
+  await page.getByRole('article').filter({ has: page.getByRole('heading', { name: 'প্র্যাকটিস সেট ১৫', exact: true }) }).getByRole('button', { name: 'অনুশীলন শুরু করুন' }).click();
+  await page.getByRole('button', { name: 'প্রশ্ন ১২, উত্তর দেওয়া হয়নি', exact: true }).click();
+  await page.getByRole('button', { name: 'C: 300 দিন', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'সঠিক উত্তর!' })).toBeVisible();
+  await expect(page.getByText('উত্তরসূচিতে অসঙ্গতি (Anomaly)')).toBeVisible();
+});

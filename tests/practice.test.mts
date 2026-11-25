@@ -16,8 +16,13 @@ test('published sets have full transcripts and match their printed keys', () => 
     8: 'CADBABCADDCAACCDADACBDCBBABCCA',
     9: 'ABCDADCDBCCCDACBBCBBBCBCADACBA',
     10: 'DBCBCCCBDCCBBBCBAAADCBCCCADDAA',
+    11: 'AACABDBBAACCDCCDBBADBBAABADDAC',
+    12: 'BDBBCACCDBACAADAAADBACCDCCBABB',
+    13: 'CBDBCBBDCBCDA' + 'DCCCACCBDAAAB' + 'CCDB',
+    14: 'AACDAAAADDBCAAACBABCDDADCDABBA',
+    15: 'ADACACCACBCCBCBAADADCBDBABCCBA',
   };
-  assert.equal(new Set(papers.map((paper) => paper.id)).size, papers.length);
+  assert.deepEqual(papers.map((paper) => paper.id), Array.from({ length: 15 }, (_, i) => i + 1));
   for (const paper of papers) {
     assert.equal(paper.questions.length, 30);
     assert.equal(paper.questions.map((q) => q.key).join(''), keys[paper.id]);
@@ -27,6 +32,9 @@ test('published sets have full transcripts and match their printed keys', () => 
       assert.equal(q.reasons.length, 4);
       assert.ok(q.note);
     });
+    const perfect = { ...newAttempt(paper.id), answers: Object.fromEntries(paper.questions.map((q) => [q.id, q.key])) };
+    const summary = summarize(paper, perfect);
+    assert.deepEqual([summary.correct, summary.wrong, summary.skipped], [30, 0, 0]);
   }
   assert.throws(() => parsePaper(1, 'A', 'missing-data'));
 });
